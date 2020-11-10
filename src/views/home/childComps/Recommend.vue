@@ -9,7 +9,7 @@
   </div>
 </template>
 
-<script>
+<script scoped>
   export default {
     name: 'Recommend',
     props: {
@@ -26,6 +26,8 @@
 <style>
   .recommend {
     display: flex;
+    border-bottom: 12px solid #eee;
+    padding: 10px 0 15px;
   }
 
   .item {

@@ -18,13 +18,9 @@
   }
 </script>
 
-<style>
+<style scoped>
   .nav-bar {
     display: flex;
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
     box-shadow: 0 1px 1px rgba(100, 100, 100, 0.2);
     line-height: 44px;
   }

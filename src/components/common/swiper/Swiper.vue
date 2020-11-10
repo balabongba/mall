@@ -1,16 +1,20 @@
 <template>
-    <div id="hy-swiper">
-      <div class="swiper" @touchstart="touchStart" @touchmove="touchMove" @touchend="touchEnd">
-        <slot></slot>
-      </div>
-      <slot name="indicator">
-      </slot>
-      <div class="indicator">
-        <slot name="indicator" v-if="showIndicator && slideCount>1">
-          <div v-for="(item, index) in slideCount" class="indi-item" :class="{active: index === currentIndex-1}" :key="index"></div>
-        </slot>
-      </div>
+  <div id="hy-swiper">
+    <div class="swiper"
+          @touchstart="touchStart"
+          @touchmove="touchMove"
+          @touchend="touchEnd">
+      <slot></slot>
     </div>
+    <div class="indicator">
+      <slot name="indicator" v-if="showIndicator && slideCount>1">
+        <div v-for="(item, index) in slideCount"
+             class="indi-item"
+             :class="{active: index === currentIndex-1}"
+             :key="index"></div>
+      </slot>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -144,7 +148,6 @@
         this.distance = this.currentX - this.startX;
         let currentPosition = -this.currentIndex * this.totalWidth;
         let moveDistance = this.distance + currentPosition;
-        console.log(this.currentX, this.distance, currentPosition, moveDistance, '11111')
         // 2.设置当前的位置
         this.setTransform(moveDistance);
       },

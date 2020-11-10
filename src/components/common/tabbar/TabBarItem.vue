@@ -45,7 +45,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   /* tabbar高度为49px是大家公认最舒适的 */
   .tab-bar-item {
     flex: 1;
