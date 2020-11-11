@@ -1,17 +1,21 @@
 <template>
   <div id="hy-swiper">
-    <div class="swiper"
-          @touchstart="touchStart"
-          @touchmove="touchMove"
-          @touchend="touchEnd">
+    <div
+      class="swiper"
+      @touchstart="touchStart"
+      @touchmove="touchMove"
+      @touchend="touchEnd"
+    >
       <slot></slot>
     </div>
     <div class="indicator">
       <slot name="indicator" v-if="showIndicator && slideCount>1">
-        <div v-for="(item, index) in slideCount"
-             class="indi-item"
-             :class="{active: index === currentIndex-1}"
-             :key="index"></div>
+        <div
+          v-for="(item, index) in slideCount"
+          class="indi-item"
+          :class="{active: index == currentIndex-1}"
+          :key="index"
+        ></div>
       </slot>
     </div>
   </div>
@@ -140,7 +144,6 @@
         this.stopTimer();
         // 3.保存开始滚动的位置
         this.startX = e.touches[0].pageX;
-        console.log(this.startX, 'startX 1')
       },
       touchMove(e) {
         // 1.计算出用户拖动的距离

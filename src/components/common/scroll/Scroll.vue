@@ -16,7 +16,7 @@
         type: Number,
         default: 0
       },
-      pullUpLoan: {
+      pullUpLoad: {
         type: Boolean,
         default: false
       }
@@ -30,22 +30,29 @@
     // 如果是绑定在普通元素上，那么获取到的是一个元素对象
     mounted() {
       this.scroll = new BScroll(this.$refs.wrapper, {
-        probeType: this.probeType,
         click: true,
-        pullUpLoan: this.pullUpLoan
+        probeType: this.probeType,
+        pullUpLoad: this.pullUpLoad
       })
 
+      // 监听当前位置
       this.scroll.on('scroll', (position) => {
         this.$emit('scroll', position)
       })
 
-      this.scroll.on('pullingUp', () => {
-        this.$emit('pullingUp')
-      })
+      // 监听底部上拉加载
+      if(this.pullUpLoad) {
+        this.scroll.on('pullingUp', () => {
+          this.$emit('pullingUp')
+        })
+      }
     },
     methods: {
       scrollTo(x, y, time=300) {
-        this.scroll.scrollTo(x, y, time)
+        this.scroll && this.scroll.scrollTo(x, y, time)
+      },
+      refresh() {
+        this.scroll && this.scroll.refresh()
       },
       finishPullUp() {
         this.scroll.finishPullUp()

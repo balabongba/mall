@@ -3,16 +3,30 @@
     <nav-bar class="home-nav">
       <div slot="center">首页</div>
     </nav-bar>
-    <scroll class="content"
-            ref="scroll"
-            :probe-type="3"
-            @scroll="contentScroll"
-            :pull-up-loan="true"
-            @pullingUp="loadMore">
-      <home-swiper :banners="banners" />
+    <tab-contorl
+        class="fixed"
+        v-show="isFixed"
+        :titles="['流行', '新款', '精选']" @tabClick="tabClick"
+        ref="tabControlTop"
+      />
+    <scroll
+      class="content"
+      ref="scroll"
+      :probe-type="3"
+      @scroll="contentScroll"
+      :pull-up-load="true"
+      @pullingUp="loadMore"
+    >
+      <home-swiper
+        :banners="banners"
+        @swiperImageLoad="swiperImageLoad"
+      />
       <recommend :recommends="recommends" />
       <feature />
-      <tab-contorl class="tab-contorl" :titles="['流行', '新款', '精选']" @tabClick="tabClick" />
+      <tab-contorl
+        :titles="['流行', '新款', '精选']" @tabClick="tabClick"
+        ref="tabControl"
+      />
       <goods-list :goodsList="showGoods" />
     </scroll>
     <!-- .native用于监听目标组件根元素的原生事件 -->
@@ -32,6 +46,7 @@
   import Feature from './childComps/FeatureView'
 
   import { getHomeMultidata, getHomeGoods } from 'network/home'
+  import { debounce } from 'common/utils'
 
   export default {
     name: 'Home',
@@ -55,7 +70,9 @@
           'sell': {page: 0, list: []},
         },
         currentType: 'pop',
-        isShowBack: false
+        isShowBack: false,
+        tabOffsetTop: 0,
+        isFixed: false
       }
     },
     computed: {
@@ -71,6 +88,13 @@
       this.getHomeGoods('new')
       this.getHomeGoods('sell')
     },
+    mounted() {
+      // 3.监听item中的图片加载
+      const refresh = debounce(this.$refs.scroll.refresh, 50)
+      this.$bus.$on('itemImageLoad', () => {
+        refresh()
+      })
+    },
     methods: {
       // 事件监听相关
       tabClick(index) {
@@ -85,6 +109,8 @@
             this.currentType = 'sell'
             break
         }
+        this.$refs.tabControl.currentIndex = index
+        this.$refs.tabControlTop.currentIndex = index
       },
       // scrollTo(x, y, time(ms))
       backClick() {
@@ -95,9 +121,13 @@
       },
       contentScroll(position) {
         this.isShowBack = -position.y > 1000
+        this.isFixed = -position.y > 606
       },
       loadMore() {
         this.getHomeGoods(this.currentType)
+      },
+      swiperImageLoad() {
+        this.tabOffsetTop = this.$refs.tabControl.$el.offsetTop
       },
       // 网络请求相关
       getHomeMultidata() {
@@ -111,6 +141,8 @@
         getHomeGoods(type, page).then(res => {
           this.goods[type].list.push(...res.data.list)
           this.goods[type].page += 1
+
+          // 完成底部上拉
           this.$refs.scroll.finishPullUp()
         })
       }
@@ -125,18 +157,15 @@
   }
 
   .home-nav {
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
     background-color: #f6f6f6;
-    z-index: 1;
   }
 
-  .tab-contorl {
-    position: sticky;
+  .fixed {
+    position: fixed;
     top: 44px;
-    z-index: 1;
+    right: 0;
+    left: 0;
+    z-index: 1
   }
 
   .content {
