@@ -1,9 +1,13 @@
 <template>
   <div class="tab-contorl">
-    <div class="tab-contorl-item"
-         v-for="(item, index) in titles" :key="index"
-         :class="{avtive: index === currentIndex}"
-         @click="itemClick(index)">
+    <div
+      class="tab-contorl-item"
+      v-for="(item, index) in titles"
+      :key="index"
+      :class="{avtive: index === currentIndex}"
+      @click="itemClick(index)"
+      :style="{ backgroundColor: bgColor }"
+    >
       <span>{{item}}</span>
     </div>
   </div>
@@ -18,6 +22,10 @@
         default() {
           return []
         }
+      },
+      bgColor: {
+        type: String,
+        default: 'var(--color-background)'
       }
     },
     data() {
@@ -42,7 +50,6 @@
     font-size: 16px;
     height: 40px;
     line-height: 40px;
-    background-color: var(--color-background);
   }
 
   .tab-contorl-item {

@@ -40,6 +40,7 @@
         this.$emit('scroll', position)
       })
 
+
       // 监听底部上拉加载
       if(this.pullUpLoad) {
         this.scroll.on('pullingUp', () => {
@@ -56,6 +57,9 @@
       },
       finishPullUp() {
         this.scroll.finishPullUp()
+      },
+      getScrollY() {
+        return this.scroll ? this.scroll.y : 0
       }
     }
   }

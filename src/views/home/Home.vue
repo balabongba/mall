@@ -35,13 +35,13 @@
 </template>
 
 <script>
-  import NavBar from 'components/common/navbar/NavBar.vue'
-  import Scroll from 'components/common/scroll/Scroll.vue'
-  import TabContorl from 'components/content/tab-contorl/TabContorl.vue'
+  import NavBar from 'components/common/navbar/NavBar'
+  import Scroll from 'components/common/scroll/Scroll'
+  import TabContorl from 'components/content/tab-contorl/TabContorl'
   import GoodsList from 'components/content/goods/GoodsList'
-  import BackTop from 'components/content/back-top/BackTop.vue'
+  import BackTop from 'components/content/back-top/BackTop'
 
-  import HomeSwiper from './childComps/HomeSwiper.vue'
+  import HomeSwiper from './childComps/HomeSwiper'
   import Recommend from './childComps/Recommend'
   import Feature from './childComps/FeatureView'
 
@@ -72,13 +72,21 @@
         currentType: 'pop',
         isShowBack: false,
         tabOffsetTop: 0,
-        isFixed: false
+        isFixed: false,
+        saveY: 0
       }
     },
     computed: {
       showGoods() {
         return this.goods[this.currentType].list
       }
+    },
+    activated() {
+      this.$refs.scroll.refresh()
+      this.$refs.scroll.scrollTo(0, this.saveY, 0)
+    },
+    deactivated() {
+      this.saveY = this.$refs.scroll.getScrollY()
     },
     created() {
       // 1.请求多个数据
@@ -121,7 +129,7 @@
       },
       contentScroll(position) {
         this.isShowBack = -position.y > 1000
-        this.isFixed = -position.y > 606
+        this.isFixed = -position.y > this.tabOffsetTop
       },
       loadMore() {
         this.getHomeGoods(this.currentType)
@@ -138,13 +146,14 @@
       },
       getHomeGoods(type) {
         const page = this.goods[type].page + 1
-        getHomeGoods(type, page).then(res => {
-          this.goods[type].list.push(...res.data.list)
-          this.goods[type].page += 1
+        getHomeGoods(type, page)
+          .then(res => {
+            this.goods[type].list.push(...res.data.list)
+            this.goods[type].page += 1
 
-          // 完成底部上拉
-          this.$refs.scroll.finishPullUp()
-        })
+            // 完成底部上拉
+            this.$refs.scroll.finishPullUp()
+          })
       }
     }
   }

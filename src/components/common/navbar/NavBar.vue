@@ -21,8 +21,10 @@
 <style scoped>
   .nav-bar {
     display: flex;
-    box-shadow: 0 1px 1px rgba(100, 100, 100, 0.2);
+    height: 44px;
     line-height: 44px;
+    box-shadow: 0 1px 2px rgba(100, 100, 100, 0.2);
+    text-align: center;
   }
 
   .left {
@@ -35,6 +37,5 @@
 
   .center {
     flex: 1;
-    text-align: center;
   }
 </style>
