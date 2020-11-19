@@ -39,14 +39,13 @@
   import Scroll from 'components/common/scroll/Scroll'
   import TabContorl from 'components/content/tab-contorl/TabContorl'
   import GoodsList from 'components/content/goods/GoodsList'
-  import BackTop from 'components/content/back-top/BackTop'
 
   import HomeSwiper from './childComps/HomeSwiper'
   import Recommend from './childComps/Recommend'
   import Feature from './childComps/FeatureView'
 
   import { getHomeMultidata, getHomeGoods } from 'network/home'
-  import { debounce } from 'common/utils'
+  import { itemListenerMixin, backTopMixin } from 'common/mixin'
 
   export default {
     name: 'Home',
@@ -55,11 +54,11 @@
       Scroll,
       TabContorl,
       GoodsList,
-      BackTop,
       HomeSwiper,
       Recommend,
       Feature
     },
+    mixins: [itemListenerMixin, backTopMixin],
     data() {
       return {
         banners: [],
@@ -70,7 +69,6 @@
           'sell': {page: 0, list: []},
         },
         currentType: 'pop',
-        isShowBack: false,
         tabOffsetTop: 0,
         isFixed: false,
         saveY: 0
@@ -87,6 +85,7 @@
     },
     deactivated() {
       this.saveY = this.$refs.scroll.getScrollY()
+      this.$bus.$off('itemImageLoad', this.itemImgListener)
     },
     created() {
       // 1.请求多个数据
@@ -98,10 +97,13 @@
     },
     mounted() {
       // 3.监听item中的图片加载
-      const refresh = debounce(this.$refs.scroll.refresh, 50)
-      this.$bus.$on('itemImageLoad', () => {
-        refresh()
-      })
+      // 为减少多个页面重复代码，使用了mixin混入
+      // const refresh = debounce(() => {
+      //   this.$refs.scroll.refresh
+      // }, 100)
+      // this.$bus.$on('itemImageLoad', () => {
+      //   refresh()
+      // })
     },
     methods: {
       // 事件监听相关
@@ -121,18 +123,19 @@
         this.$refs.tabControlTop.currentIndex = index
       },
       // scrollTo(x, y, time(ms))
-      backClick() {
-        // 方法一：通过ref属性获取到scroll组件对象，然后对其中的scroll实例调用scrollTo方法
-        // this.$refs.scroll.scroll.scrollTo(0, 0, 500)
-        // 方法二：在组件中封装一个scrollTo方法，然后直接调用
-        this.$refs.scroll.scrollTo(0, 0)
-      },
+      // backClick() {
+      //   // 方法一：通过ref属性获取到scroll组件对象，然后对其中的scroll实例调用scrollTo方法
+      //   // this.$refs.scroll.scroll.scrollTo(0, 0, 500)
+      //   // 方法二：在组件中封装一个scrollTo方法，然后直接调用
+      //   this.$refs.scroll.scrollTo(0, 0)
+      // },
       contentScroll(position) {
         this.isShowBack = -position.y > 1000
         this.isFixed = -position.y > this.tabOffsetTop
       },
       loadMore() {
         this.getHomeGoods(this.currentType)
+        this.$refs.scroll.refresh()
       },
       swiperImageLoad() {
         this.tabOffsetTop = this.$refs.tabControl.$el.offsetTop
@@ -177,16 +180,18 @@
     z-index: 1
   }
 
+  /* calc()函数在运算符前后要留一个空格 */
   .content {
     overflow: hidden;
-    position:absolute;
-    top: 44px;
+    position: relative;
+    /* top: 44px;
     right: 0;
     bottom: 49px;
-    left: 0;
+    left: 0; */
+    height: calc(100% - 93px);
   }
 
-  /* calc()函数在运算符前后要留一个空格 */
+
   /* .content {
     margin-top: 44px;
     height: calc(100% - 93px);
