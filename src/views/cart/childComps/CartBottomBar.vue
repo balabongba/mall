@@ -14,7 +14,7 @@
 </template>
 
 <script>
-  import CheckButton from './CheckButton'
+  import CheckButton from 'components/common/checkbutton/CheckButton'
 
   export default {
     name: 'CartBottomBar',
@@ -36,22 +36,26 @@
         return this.$store.state.cartList.filter(item => item.checked).length
       },
       allTrue() {
-        if(this.$store.state.cartList.length === 0) {
-          return false
-        } else {
-          return this.account === this.$store.state.cartList.length
-        }
+        if(this.$store.state.cartList.length === 0) return false
+        // return this.account === this.$store.state.cartList.length
+        return !this.$store.state.cartList.find(item => !item.checked)
       }
     },
     methods: {
       changeAll() {
         if(this.allTrue) {
-          for(let item of this.$store.state.cartList) {
-            item.checked = false
+          // for(let item of this.$store.state.cartList) {
+          //   item.checked = false
+          // }
+          for(let i = 0, len = this.$store.state.cartList.length; i < len; i++) {
+            this.$store.state.cartList[i].checked = false
           }
         } else {
-          for(let item of this.$store.state.cartList) {
-            item.checked = true
+          // for(let item of this.$store.state.cartList) {
+          //   item.checked = true
+          // }
+          for(let i = 0, len = this.$store.state.cartList.length; i < len; i++) {
+            this.$store.state.cartList[i].checked = true
           }
         }
       }
@@ -100,7 +104,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: orangered;
+    background-color: #ff5777;
     color: #fff;
     font-size: 16px;
   }

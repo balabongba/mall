@@ -48,12 +48,13 @@ export default {
 <style scoped>
   /* tabbar高度为49px是大家公认最舒适的 */
   .tab-bar-item {
-    flex: 1;
-    flex-direction: column;
-    justify-content: center;
     height: 49px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
     font-size: 14px;
-    text-align: center;
   }
 
   .tab-bar-item img {

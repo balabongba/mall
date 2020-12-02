@@ -6,7 +6,8 @@
     <tab-contorl
         class="fixed"
         v-show="isFixed"
-        :titles="['流行', '新款', '精选']" @tabClick="tabClick"
+        :titles="['流行', '新款', '精选']"
+        @tabClick="tabClick"
         ref="tabControlTop"
       />
     <scroll
@@ -24,7 +25,8 @@
       <recommend :recommends="recommends" />
       <feature />
       <tab-contorl
-        :titles="['流行', '新款', '精选']" @tabClick="tabClick"
+        :titles="['流行', '新款', '精选']"
+        @tabClick="tabClick"
         ref="tabControl"
       />
       <goods-list :goodsList="showGoods" />

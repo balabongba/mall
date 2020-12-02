@@ -25,7 +25,9 @@
   import CartListItem from './childComps/CartListItem'
   import CartBottomBar from './childComps/CartBottomBar'
 
+  // 用于映射getters中的元素，在computed中使用
   import { mapGetters } from 'vuex'
+  // mapActions用于映射actions中的元素，在methods中使用
 
   export default {
     name: 'Cart',

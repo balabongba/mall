@@ -40,6 +40,7 @@
   import { getDetail, getRecommend, Goods, Shop, GoodsParam } from 'network/detail'
   import { itemListenerMixin, backTopMixin } from 'common/mixin'
   import { debounce } from 'common/utils'
+  import { mapActions } from 'vuex'
 
   export default {
     name: 'Detail',
@@ -123,6 +124,7 @@
       this.$bus.$off('itemImageLoad', this.itemImgListener)
     },
     methods: {
+      ...mapActions(['toCart']),
       imageLoad() {
         this.$refs.scroll.refresh()
         this.getThemeTops()
@@ -161,7 +163,16 @@
         produc.iid = this.iid
 
         // 添加至购物车
-        this.$store.dispatch('toCart', produc)
+        // 未使用mapActions
+        // this.$store.dispatch('toCart', produc)
+        //   .then(res => {
+        //     console.log(res)
+        //   })
+
+        // 使用mapActions后
+        this.toCart(produc).then(res => {
+          this.$toast.show(res)
+        })
       }
     }
   }
