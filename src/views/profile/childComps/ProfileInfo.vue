@@ -1,8 +1,10 @@
 <template>
   <div id="info">
-    <div class="info-item">
+    <div @click="count" class="info-item">
       <img src="~assets/img/profile/info/jinbi.png" alt="">
       <div>积分商城</div>
+      <span>{{points}}</span>
+      <span>{{$store.state.points}}</span>
       <img style="height: 20px;" src="~assets/img/common/more.png" alt="">
     </div>
     <div class="info-item">
@@ -13,14 +15,16 @@
     <div class="info-item">
       <img src="~assets/img/profile/info/xiaoxi.png" alt="">
       <div>我的消息</div>
+      <span v-show="newsLength">{{newsLength}}</span>
       <img style="height: 20px;" src="~assets/img/common/more.png" alt="">
     </div>
     <div class="info-item">
       <img src="~assets/img/profile/info/zuji.png" alt="">
       <div>我的足迹</div>
+      <span style="color: var(--color-high-text);background-color: #fff;">{{historyLength}}</span>
       <img style="height: 20px;" src="~assets/img/common/more.png" alt="">
     </div>
-    <div class="info-item" style="border: none;">
+    <div @click="cnt" class="info-item" style="border: none;">
       <img src="~assets/img/profile/info/service.png" alt="">
       <div>在线客服</div>
       <img style="height: 20px;" src="~assets/img/common/more.png" alt="">
@@ -30,11 +34,28 @@
 </template>
 
 <script>
+  import { mapGetters } from 'vuex'
+
   export default {
     name: 'ProfileInfo',
+    props: {
+      points: {
+        type: Number,
+        default: 0
+      }
+    },
     data() {
-      return {
-
+      return {}
+    },
+    computed: {
+      ...mapGetters(['newsLength', 'historyLength'])
+    },
+    methods: {
+      count() {
+        this.points++
+      },
+      cnt() {
+        this.$store.state.points++
       }
     }
   }
@@ -66,5 +87,16 @@
 
   .info-item div {
     flex: 1;
+  }
+
+  .info-item span {
+    height: 16px;
+    width: 16px;
+    color: #fff;
+    background-color: var(--color-high-text);
+    border-radius: 50%;
+    margin-right: 10px;
+    font-weight: 600;
+    text-align: center;
   }
 </style>

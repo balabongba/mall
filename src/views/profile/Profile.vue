@@ -2,7 +2,7 @@
   <div id="profile">
     <profile-nav-bar />
     <profile-order />
-    <profile-info />
+    <profile-info :points="$store.state.points" />
   </div>
 </template>
 
